@@ -98,6 +98,7 @@ Each algorithm was tuned using `GridSearchCV` with `scoring='recall'` and `cv=5`
 - **ROC-AUC:** 0.906
 
 **Best Hyperparameters:**
+```python
 {
     'n_estimators': 100,
     'max_depth': 5,
@@ -106,6 +107,7 @@ Each algorithm was tuned using `GridSearchCV` with `scoring='recall'` and `cv=5`
     'min_samples_leaf': 2,
     'class_weight': 'balanced'
 }
+```
 
 ---
 
@@ -169,7 +171,7 @@ loan_default_prediction/
 
 ### 1. Installation
 ```bash
-git clone https://github.com/yourusername/loan-default-prediction.git
+git clone https://github.com/majidalimajid561/loan-default-prediction.git
 cd loan-default-prediction
 python -m venv venv
 source venv/bin/activate      # Windows: venv\Scripts\activate
@@ -181,5 +183,15 @@ Streamlit_App:
 
 streamlit run streamlit_app/app.py
 ```
+---
 
-c
+## 👤 Author
+
+Majid Mehmood
+
+LinkedIn: [My Profile](www.linkedin.com/in/majid-mehmood-4286533ba)
+
+---
+
+If you find this project useful, feel free to ⭐ star the repository and explore the code.
+
