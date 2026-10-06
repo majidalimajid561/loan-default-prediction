@@ -1,0 +1,27 @@
+# Core
+pandas
+numpy
+
+# ML
+scikit-learn
+imbalanced-learn
+
+# Visualization
+matplotlib
+seaborn
+
+# Model persistence
+joblib
+
+# Backend
+fastapi
+uvicorn[standard]
+jinja2
+python-multipart
+
+# Streamlit (alternative UI)
+streamlit
+
+# Notebooks
+jupyter
+ipykernel

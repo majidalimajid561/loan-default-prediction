@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RiskLens | Loan Default Risk Detection</title>
+  <meta name="description" content="Machine-learning powered loan default risk detection. Enter applicant and loan details to get an instant risk assessment." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="bg-glow bg-glow--one"></div>
+  <div class="bg-glow bg-glow--two"></div>
+
+  <!-- ============ HEADER ============ -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#top" class="brand" aria-label="RiskLens home">
+        <span class="brand-mark">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 3v6c0 5-3.4 9.3-8 11-4.6-1.7-8-6-8-11V5l8-3z"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg>
+        </span>
+        <span class="brand-name">Risk<span>Lens</span></span>
+      </a>
+      <nav class="nav">
+        <a href="#predictor">Predictor</a>
+        <a href="#how">How it works</a>
+        <span class="api-status" id="apiStatus" title="API connection status">
+          <i class="dot"></i><span id="apiStatusText">Checking API…</span>
+        </span>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- ============ HERO ============ -->
+    <section class="hero container">
+      <span class="eyebrow">ML-powered credit risk</span>
+      <h1>Loan default risk,<br /><em>scored in seconds.</em></h1>
+      <p class="hero-sub">
+        Enter an applicant's profile and loan details. Our trained model estimates the
+        probability of default and flags the application as <strong>safe</strong> or <strong>high risk</strong>.
+      </p>
+      <div class="hero-chips">
+        <span class="chip"><b>11</b> input features</span>
+        <span class="chip"><b>40%</b> default threshold</span>
+        <span class="chip"><b>Real-time</b> FastAPI inference</span>
+      </div>
+      <a href="#predictor" class="btn btn-primary hero-cta">Start assessment
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+      </a>
+    </section>
+
+    <!-- ============ PREDICTOR ============ -->
+    <section class="predictor container" id="predictor">
+      <div class="layout">
+
+        <!-- ---------- FORM ---------- -->
+        <form id="loanForm" class="card form-card" novalidate autocomplete="off">
+          <div class="card-head">
+            <div>
+              <h2>Application details</h2>
+              <p>All fields are required.</p>
+            </div>
+            <button type="button" class="btn btn-ghost" id="fillSample">Load sample</button>
+          </div>
+
+          <!-- Applicant -->
+          <fieldset>
+            <legend><span class="step">1</span> Applicant</legend>
+            <div class="grid">
+              <div class="field">
+                <label for="person_age">Age <small>years</small></label>
+                <input type="number" id="person_age" name="person_age" min="18" max="100" step="1" placeholder="e.g. 28" required />
+                <span class="error" data-for="person_age"></span>
+              </div>
+
+              <div class="field">
+                <label for="person_income">Annual income <small>USD</small></label>
+                <div class="input-affix">
+                  <span class="affix">$</span>
+                  <input type="number" id="person_income" name="person_income" min="1" step="any" placeholder="e.g. 55000" required />
+                </div>
+                <span class="error" data-for="person_income"></span>
+              </div>
+
+              <div class="field">
+                <label for="person_home_ownership">Home ownership</label>
+                <select id="person_home_ownership" name="person_home_ownership" required>
+                  <option value="" disabled selected>Select…</option>
+                  <option value="RENT">Rent</option>
+                  <option value="OWN">Own</option>
+                  <option value="MORTGAGE">Mortgage</option>
+                  <option value="OTHER">Other</option>
+                </select>
+                <span class="error" data-for="person_home_ownership"></span>
+              </div>
+
+              <div class="field">
+                <label for="person_emp_length">Employment length <small>years</small></label>
+                <input type="number" id="person_emp_length" name="person_emp_length" min="0" max="60" step="1" placeholder="e.g. 4" required />
+                <span class="error" data-for="person_emp_length"></span>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Loan -->
+          <fieldset>
+            <legend><span class="step">2</span> Loan</legend>
+            <div class="grid">
+              <div class="field">
+                <label for="loan_intent">Purpose</label>
+                <select id="loan_intent" name="loan_intent" required>
+                  <option value="" disabled selected>Select…</option>
+                  <option value="EDUCATION">Education</option>
+                  <option value="MEDICAL">Medical</option>
+                  <option value="VENTURE">Venture</option>
+                  <option value="PERSONAL">Personal</option>
+                  <option value="DEBTCONSOLIDATION">Debt consolidation</option>
+                  <option value="HOMEIMPROVEMENT">Home improvement</option>
+                </select>
+                <span class="error" data-for="loan_intent"></span>
+              </div>
+
+              <div class="field">
+                <label for="loan_grade">Loan grade</label>
+                <select id="loan_grade" name="loan_grade" required>
+                  <option value="" disabled selected>Select…</option>
+                  <option value="A">A (best)</option>
+                  <option value="B">B</option>
+                  <option value="C">C</option>
+                  <option value="D">D</option>
+                  <option value="E">E</option>
+                  <option value="F">F</option>
+                  <option value="G">G (weakest)</option>
+                </select>
+                <span class="error" data-for="loan_grade"></span>
+              </div>
+
+              <div class="field">
+                <label for="loan_amnt">Loan amount <small>USD</small></label>
+                <div class="input-affix">
+                  <span class="affix">$</span>
+                  <input type="number" id="loan_amnt" name="loan_amnt" min="1" step="any" placeholder="e.g. 10000" required />
+                </div>
+                <span class="error" data-for="loan_amnt"></span>
+              </div>
+
+              <div class="field">
+                <label for="loan_int_rate">Interest rate <small>%</small></label>
+                <div class="input-affix input-affix--right">
+                  <input type="number" id="loan_int_rate" name="loan_int_rate" min="0" max="40" step="any" placeholder="e.g. 11.5" required />
+                  <span class="affix">%</span>
+                </div>
+                <span class="error" data-for="loan_int_rate"></span>
+              </div>
+
+              <div class="field field--wide">
+                <label for="loan_percent_income">Loan-to-income ratio <small>auto-calculated</small></label>
+                <div class="ratio-box">
+                  <input type="text" id="loan_percent_income" name="loan_percent_income" readonly tabindex="-1" placeholder="Fills in from amount ÷ income" />
+                  <span class="ratio-pill" id="ratioPill">—</span>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Credit -->
+          <fieldset>
+            <legend><span class="step">3</span> Credit history</legend>
+            <div class="grid">
+              <div class="field">
+                <label id="defaultLabel">Past default on file</label>
+                <div class="segmented" role="radiogroup" aria-labelledby="defaultLabel">
+                  <input type="radio" id="default_n" name="cb_person_default_on_file" value="N" />
+                  <label for="default_n">No</label>
+                  <input type="radio" id="default_y" name="cb_person_default_on_file" value="Y" />
+                  <label for="default_y">Yes</label>
+                </div>
+                <span class="error" data-for="cb_person_default_on_file"></span>
+              </div>
+
+              <div class="field">
+                <label for="cb_person_cred_hist_length">Credit history length <small>years</small></label>
+                <input type="number" id="cb_person_cred_hist_length" name="cb_person_cred_hist_length" min="0" max="60" step="1" placeholder="e.g. 5" required />
+                <span class="error" data-for="cb_person_cred_hist_length"></span>
+              </div>
+            </div>
+          </fieldset>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-ghost" id="resetBtn">Reset</button>
+            <button type="submit" class="btn btn-primary" id="submitBtn">
+              <span class="btn-label">Assess risk</span>
+              <span class="spinner" aria-hidden="true"></span>
+            </button>
+          </div>
+        </form>
+
+        <!-- ---------- RESULT ---------- -->
+        <aside class="result-col">
+          <div class="card result-card" id="resultCard" data-state="idle" aria-live="polite">
+
+            <!-- Idle -->
+            <div class="state state--idle">
+              <div class="idle-icon">
+                <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>
+              </div>
+              <h3>Your risk assessment will appear here</h3>
+              <p>Fill in the application and press <b>Assess risk</b>.</p>
+            </div>
+
+            <!-- Loading -->
+            <div class="state state--loading">
+              <div class="pulse-ring"></div>
+              <h3>Analysing application…</h3>
+              <p>Running the model on your inputs.</p>
+            </div>
+
+            <!-- Error -->
+            <div class="state state--error">
+              <div class="error-icon">!</div>
+              <h3 id="errorTitle">Something went wrong</h3>
+              <p id="errorMessage"></p>
+              <button type="button" class="btn btn-ghost" id="retryBtn">Try again</button>
+            </div>
+
+            <!-- Result -->
+            <div class="state state--result">
+              <div class="verdict">
+                <span class="verdict-badge" id="verdictBadge">Safe</span>
+                <h3 id="verdictTitle">Low default risk</h3>
+              </div>
+
+              <div class="gauge">
+                <svg viewBox="0 0 220 130" class="gauge-svg" role="img" aria-label="Default probability gauge">
+                  <path class="gauge-track" d="M 20 110 A 90 90 0 0 1 200 110" pathLength="100" />
+                  <path class="gauge-fill" id="gaugeFill" d="M 20 110 A 90 90 0 0 1 200 110" pathLength="100" />
+                  <!-- 40% threshold tick -->
+                  <line class="gauge-tick" x1="85.9" y1="35.8" x2="78.5" y2="13" />
+                </svg>
+                <div class="gauge-value">
+                  <span id="probValue">0.0</span><small>%</small>
+                  <em>probability of default</em>
+                </div>
+              </div>
+
+              <p class="threshold-note">
+                <i></i> Applications at or above <b>40%</b> are flagged as default risk.
+              </p>
+
+              <p class="verdict-text" id="verdictText"></p>
+
+              <dl class="summary">
+                <div><dt>Loan amount</dt><dd id="sumAmount">—</dd></div>
+                <div><dt>Loan-to-income</dt><dd id="sumRatio">—</dd></div>
+                <div><dt>Grade</dt><dd id="sumGrade">—</dd></div>
+                <div><dt>Interest rate</dt><dd id="sumRate">—</dd></div>
+              </dl>
+            </div>
+          </div>
+
+          <!-- History -->
+          <div class="card history-card" id="historyCard" hidden>
+            <div class="history-head">
+              <h4>Recent assessments</h4>
+              <button type="button" class="link-btn" id="clearHistory">Clear</button>
+            </div>
+            <ul class="history-list" id="historyList"></ul>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ============ HOW IT WORKS ============ -->
+    <section class="how container" id="how">
+      <h2>How it works</h2>
+      <div class="how-grid">
+        <article class="card how-card">
+          <span class="how-num">01</span>
+          <h3>Enter the details</h3>
+          <p>Provide the applicant profile, loan terms, and credit history. The loan-to-income ratio is calculated for you.</p>
+        </article>
+        <article class="card how-card">
+          <span class="how-num">02</span>
+          <h3>Model scores the risk</h3>
+          <p>Your inputs are sent to the FastAPI service, where the trained ML model returns a default probability.</p>
+        </article>
+        <article class="card how-card">
+          <span class="how-num">03</span>
+          <h3>Get a clear verdict</h3>
+          <p>A probability of 40% or higher is marked as default risk; anything lower is marked safe.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> RiskLens. Built with FastAPI, HTML, CSS and JavaScript.</p>
+      <p class="disclaimer">Model output is a statistical estimate for decision support, not a final credit decision.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
