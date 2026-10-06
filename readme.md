@@ -98,7 +98,6 @@ Each algorithm was tuned using `GridSearchCV` with `scoring='recall'` and `cv=5`
 - **ROC-AUC:** 0.906
 
 **Best Hyperparameters:**
-```python
 {
     'n_estimators': 100,
     'max_depth': 5,
@@ -107,3 +106,80 @@ Each algorithm was tuned using `GridSearchCV` with `scoring='recall'` and `cv=5`
     'min_samples_leaf': 2,
     'class_weight': 'balanced'
 }
+
+---
+
+## 🖥️ Application
+
+### FastAPI Backend
+- `/` — Serves HTML form
+- `/predict` — POST endpoint for predictions
+-  — Serves CSS/JS from `frontend/`
+- `/docs` — Auto-generated API documentation
+
+### Frontend
+- Custom HTML/CSS/JS
+- Form with all applicant fields
+- Real-time prediction via fetch API
+- Color-coded result (Green = Safe, Red = Default)
+- Probability display
+
+### Streamlit (Alternative)
+Also includes a Streamlit app for quick testing.
+
+---
+```
+## 🛠️ Project Structure
+loan_default_prediction/
+│
+├── data/
+│ └── credit_risk_dataset.csv
+│
+├── notebooks/
+│ ├── 01_eda.ipynb
+│
+├── fastapi/
+│ ├── main.py
+│ ├── prediction/
+│ │ └── prediction.py
+│ └── pydantic_model/
+│ └── loan_application.py
+│
+├── frontend/
+│ ├── index.html
+│ ├── style.css
+│ └── script.js
+│
+├── models/
+│ ├── loan_default_pipeline.pkl
+│ └── model_metadata.json
+│
+├── streamlit_app/
+│ └── app.py
+│
+├── .gitignore
+├── README.md
+└── requirements.txt
+
+```
+
+---
+
+## 🚀 How to Run
+
+### 1. Installation
+```bash
+git clone https://github.com/yourusername/loan-default-prediction.git
+cd loan-default-prediction
+python -m venv venv
+source venv/bin/activate      # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+cd fastapi
+uvicorn main:app --reload
+
+Streamlit_App:
+
+streamlit run streamlit_app/app.py
+```
+
+c
